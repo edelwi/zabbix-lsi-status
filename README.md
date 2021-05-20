@@ -1,4 +1,4 @@
-# zabbix-hpsa-status
+# zabbix-lsi-status
 
 Zabbix Template and python script with Low Level Discovery (LLD) for LSI MegaRAID controllers.
 
