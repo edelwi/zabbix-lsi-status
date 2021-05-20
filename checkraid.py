@@ -266,8 +266,8 @@ def lld_discovery_arrays(data):
                     ar_name = match.groupdict()['array_name']
                     json_data = json_data + f'{{"{{#CTRLNAME}}":"{clean_name(ctrl)}","' \
                                             f'{{#ARRAYNAME}}":"{clean_name(ar_name)}"}},'
-                else:
-                    print(ar_key)
+                # else:
+                #     print(ar_key)
     json_data = json_data[:-1]
     with open(discovery_file, 'w') as fl:
         print(f'{{"data":[{json_data}]}}', file=fl)

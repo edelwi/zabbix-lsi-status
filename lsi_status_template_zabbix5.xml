@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2021-05-20T09:05:54Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template LSI MegaRAID Status</template>
+            <name>Template LSI MegaRAID Status</name>
+            <description>Discovery of existing controllers, arrays and physical disks. Getting their status and
+                metrics.
+            </description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Controller {#CTRLNAME}</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Discover LSI MegaRAID arrays</name>
+                    <key>vfs.file.contents[/var/local/lsi_zabbix/arrays.json]</key>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#CTRLNAME}</macro>
+                                <value>.*</value>
+                                <formulaid>B</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#ARRAYNAME}</macro>
+                                <value>.*</value>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <description>Obtaining available LSI MegaRAID arrays.</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Array {#ARRAYNAME} Number Of Drives (controller {#CTRLNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME},&quot;Number Of
+                                Drives=(.*)$&quot;,,,,\1]
+                            </key>
+                            <description>Array Number Of Drives.</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Array {#ARRAYNAME} RAID Level (controller {#CTRLNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME},&quot;RAID
+                                Level=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Array RAID Level</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Array {#ARRAYNAME} State (controller {#CTRLNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME},&quot;State=(.*)$&quot;,,,,\1]</key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Array State.</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last(#3)}&lt;&gt;&quot;Optimal&quot;</expression>
+                                    <name>Array {#ARRAYNAME} State Alarm (controller {#CTRLNAME} on {HOST.NAME})</name>
+                                    <priority>WARNING</priority>
+                                    <description>Array State is not Optimal.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Discover LSI MegaRAID controllers</name>
+                    <key>vfs.file.contents[/var/local/lsi_zabbix/controllers.json]</key>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#CTRLNAME}</macro>
+                                <value>.*</value>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <description>Obtaining available LSI MegaRAID controllers.</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} Critical Disks count</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Critical Disks=(.*)$&quot;,,,,\1]</key>
+                            <description>Critical Disks count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} VD Degraded count</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Degraded=(.*)$&quot;,,,,\1]</key>
+                            <description>VD Degraded count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} Disks count</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Disks=(.*)$&quot;,,,,\1]</key>
+                            <description>Disks count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} Failed Disks count</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Failed Disks=(.*)$&quot;,,,,\1]</key>
+                            <description>Failed Disks count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} VD Offline count</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Offline=(.*)$&quot;,,,,\1]</key>
+                            <description>VD Offline count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} Product Name</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Product Name=(.*)$&quot;,,,,\1]</key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Controller Product Name</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} Serial Number</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Serial No=(.*)$&quot;,,,,\1]</key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Serial Number</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Controller {#CTRLNAME} Virtual Drives count</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME},&quot;Virtual Drives=(.*)$&quot;,,,,\1]</key>
+                            <description>Virtual Drives count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Discover LSI MegaRAID physical disks</name>
+                    <key>vfs.file.contents[/var/local/lsi_zabbix/disks.json]</key>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#CTRLNAME}</macro>
+                                <value>.*</value>
+                                <formulaid>B</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#ARRAYNAME}</macro>
+                                <value>.*</value>
+                                <formulaid>A</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#PDNAME}</macro>
+                                <value>.*</value>
+                                <formulaid>C</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <description>Obtaining available LSI MegaRAID physical disks.</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Firmware Revision (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Device
+                                Firmware Level=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Physical disk Firmware Revision</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Temperature (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Drive
+                                Temperature=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <units>C</units>
+                            <description>Physical disk Current Temperature (C)</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <preprocessing>
+                                <step>
+                                    <type>REGEX</type>
+                                    <params>(\d*)\s*C
+                                        \1
+                                    </params>
+                                </step>
+                            </preprocessing>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last(#3)}&gt;60</expression>
+                                    <recovery_mode>RECOVERY_EXPRESSION</recovery_mode>
+                                    <recovery_expression>{last()}&lt;55</recovery_expression>
+                                    <name>Disk {#PDNAME} Temperature Warning (ctrl: {#CTRLNAME}, array: {#ARRAYNAME} on
+                                        {HOST.NAME})
+                                    </name>
+                                    <priority>WARNING</priority>
+                                    <description>Physical disk temperature warning.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Model (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Inquiry
+                                Data=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Physical disk Model (with may be Serial Number)</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Media Error Count (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Media
+                                Error Count=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <description>Media Error Count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{change()}&gt;0</expression>
+                                    <recovery_mode>NONE</recovery_mode>
+                                    <name>Disk {#PDNAME} Media Error Warning (ctrl: {#CTRLNAME}, array: {#ARRAYNAME} on
+                                        {HOST.NAME})
+                                    </name>
+                                    <priority>WARNING</priority>
+                                    <description>Physical disk Media Error Count increased.</description>
+                                    <manual_close>YES</manual_close>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Other Error Count (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Other
+                                Error Count=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <description>Other Error Count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{change()}&gt;0</expression>
+                                    <recovery_mode>NONE</recovery_mode>
+                                    <name>Disk {#PDNAME} Other Error Warning (ctrl: {#CTRLNAME}, array: {#ARRAYNAME} on
+                                        {HOST.NAME})
+                                    </name>
+                                    <priority>WARNING</priority>
+                                    <description>Physical disk Other Error Count increased.</description>
+                                    <manual_close>YES</manual_close>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Interface Type (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;PD
+                                Type=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Physical disk Interface Type</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Predictive Failure Count (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})
+                            </name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Predictive
+                                Failure Count=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <description>Predictive Failure Count</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} Size (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Raw
+                                Size=(.*)$&quot;,,,,\1]
+                            </key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>Physical disk Raw Size</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <preprocessing>
+                                <step>
+                                    <type>REGEX</type>
+                                    <params>(\d*\.?\d*\s+[M|G|T]B)
+                                        \1
+                                    </params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Disk {#PDNAME} WWN (ctrl: {#CTRLNAME}, array: {#ARRAYNAME})</name>
+                            <key>vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;WWN=(.*)$&quot;,,,,\1]</key>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <description>WWN</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>Controller {#CTRLNAME} - Array {#ARRAYNAME} - Disk {#PDNAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>Disk {#PDNAME} Temperature (ctrl: {#CTRLNAME}, array: {#ARRAYNAME} on {HOST.NAME})
+                            </name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Template LSI MegaRAID Status</host>
+                                        <key>
+                                            vfs.file.regexp[/var/local/lsi_zabbix/metrics/{#CTRLNAME}__{#ARRAYNAME}__{#PDNAME},&quot;Drive
+                                            Temperature=(.*)$&quot;,,,,\1]
+                                        </key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>
