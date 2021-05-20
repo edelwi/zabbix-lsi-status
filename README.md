@@ -21,6 +21,6 @@ Zabbix Template and python script with Low Level Discovery (LLD) for LSI MegaRAI
 
     - LSI Logic / Symbios Logic MegaRAID SAS 2108 [Liberator] (rev 05)
     - MegaCLI SAS RAID Management Tool  Ver 8.07.14
-    - CentOS Linux release 7.5.1804 (Core
+    - CentOS Linux release 7.5.1804 (Core)
     - Python Python 3.6.8
     - Zabbix 5.0.7
